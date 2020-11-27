@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./js/vue.js"></script>
+    <script src="./js/vuex.js"></script>
+</head>
+<body>
+<div id="app">
+    <Shuru></Shuru>
+    <div>{{ $store.getters.showBmi }}</div>
+    <div>{{ $store.getters.showHealth }}</div>
+</div>
+<script>
+    const store = new Vuex.Store({
+        state:{
+            bmi:0,
+            health:''
+        },
+        mutations: {
+            getBmi(state, bmi) {
+                state.bmi = bmi
+            },
+            getHealth(state, health) {
+                state.health = health
+            }
+        },
+        getters: {
+            showBmi(state){
+                return state.bmi
+            },
+            showHealth(state){
+                return state.health
+            }
+        }
+    });
+    Vue.component('shuru',{
+        template:
+        '<div><input type="text" id="height"><input type="text" id="weight"><button @click="goTest">查看我的健康值</button></div>',
+        methods: {
+            goTest(){
+                let hei =document.querySelector('#height').value
+                let wei =document.querySelector('#weight').value
+                let bmi = wei/(hei*hei)
+                if(bmi <18){
+                    var health = '偏瘦'
+                }
+                else if(bmi <24){
+                    var health = '正常'
+                }
+                else{
+                    var health = '偏胖'
+                }
+                this.$store.commit("getBmi",bmi)
+                this.$store.commit("getHealth",health)
+            }
+        }
+
+
+    });
+    new Vue({
+        el: '#app',
+        store,
+        computed: {
+
+        }
+    })
+
+</script>
+</body>
+</html>
